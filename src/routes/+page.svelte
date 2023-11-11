@@ -1,18 +1,16 @@
 <script>
   const provider = new GoogleAuthProvider();
   function signIn() {
-    signInWithRedirect(auth, provider);
-    console.log("Signing in user");
+    const login = signInWithRedirect(auth, provider);
+    console.log(login.finally.name);
   }
   import { auth } from "$lib/firebase";
-  import {
-    GoogleAuthProvider,
-    getAuth,
-    signInWithRedirect,
-  } from "firebase/auth";
+  import { LightSwitch } from "@skeletonlabs/skeleton";
+  import { GoogleAuthProvider, signInWithRedirect } from "firebase/auth";
 </script>
 
-<h1>Kalendar</h1>
+<h1 class="variant-ghost-secondary text-5xl">Kalendar</h1>
 <p>Johncook did.</p>
+<LightSwitch />
 
 <button on:click={signIn}>Sign In</button>
