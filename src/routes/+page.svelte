@@ -4,30 +4,33 @@
   import {
     GoogleAuthProvider,
     getRedirectResult,
+    onAuthStateChanged,
     signInWithRedirect,
+    signOut,
   } from "firebase/auth";
+  import { onMount } from "svelte";
   import TimeGrid from "../components/timeGrid.svelte";
-  import TimeSlot from "../components/timeSlot.svelte";
   import { user } from "../stores/user";
   const provider = new GoogleAuthProvider();
 
-  async function getUser() {
-    try {
-      const result = await getRedirectResult(auth);
-      const userCreds = result?.user;
-      if (userCreds) {
-        user.set(userCreds);
+  onMount(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        console.log(currentUser.email);
+        user.set(currentUser);
       } else {
-        console.log("Couldn't find a user!");
+        console.log("Could not log in current user.");
       }
-    } catch (error) {
-      console.error("Failed to sign in.");
-    }
-  }
+    });
+  });
 
   function signIn() {
     signInWithRedirect(auth, provider);
-    getUser();
+  }
+
+  function logout() {
+    signOut(auth);
+    user.set(null);
   }
 
   let time = new Date().toLocaleString();
@@ -38,9 +41,12 @@
   <svelte:fragment slot="trail">
     {time}
     <LightSwitch />
+    {#if !$user}
+      <button on:click={signIn}>Sign In</button>
+    {:else}
+      <button on:click={logout}>{$user.email}</button>
+      <img src={$user.photoURL} alt="Google account pic" />
+    {/if}
   </svelte:fragment>
 </AppBar>
-<!-- <p>{$user?.email} did.</p>
-<button on:click={getUser}> I am him</button>
-<button on:click={signIn}>Sign In</button> -->
 <TimeGrid />
