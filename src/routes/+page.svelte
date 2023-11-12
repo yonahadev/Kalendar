@@ -6,6 +6,7 @@
     getRedirectResult,
     signInWithRedirect,
   } from "firebase/auth";
+  import TimeGrid from "../components/timeGrid.svelte";
   import TimeSlot from "../components/timeSlot.svelte";
   import { user } from "../stores/user";
   const provider = new GoogleAuthProvider();
@@ -29,28 +30,17 @@
     getUser();
   }
 
-  let time = new Date();
-
-  let selectedTime: number | null = null;
-
-  function setSelectedTime(event: CustomEvent<number>) {
-    selectedTime = event.detail;
-  }
+  let time = new Date().toLocaleString();
 </script>
 
 <AppBar>
-  <svelte:fragment slot="headline">Kalendar</svelte:fragment>
-  <LightSwitch />
+  <svelte:fragment slot="lead">Kalendar</svelte:fragment>
+  <svelte:fragment slot="trail">
+    {time}
+    <LightSwitch />
+  </svelte:fragment>
 </AppBar>
 <!-- <p>{$user?.email} did.</p>
 <button on:click={getUser}> I am him</button>
 <button on:click={signIn}>Sign In</button> -->
-<p>Selected time: {selectedTime}</p>
-{#each { length: 24 } as _, i (i)}
-  <TimeSlot
-    on:select={setSelectedTime}
-    time={i}
-    selected={selectedTime}
-    task="Guns"
-  />
-{/each}
+<TimeGrid />

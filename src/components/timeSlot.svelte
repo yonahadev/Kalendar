@@ -1,23 +1,24 @@
 <script lang="ts">
   import { createEventDispatcher, type EventDispatcher } from "svelte";
 
-  export let time: number = 0;
-  export let task = "Nothing planned";
-  export let selected: number | null = null;
+  export let date: Date;
+  export let selected: Date | null;
+
+  export let task: string = "Nothing planned";
 
   const dispatch: EventDispatcher<any> = createEventDispatcher();
 
   function selectTimeSlot() {
-    dispatch("select", time);
+    dispatch("select", date);
   }
 </script>
 
 <button
   on:click={selectTimeSlot}
-  class="block card card-hover w-1/4
-  {time == selected ? 'variant-glass-primary' : 'variant-glass-secondary'}
-  "
+  class="block card card-hover w-fit
+{date == selected ? 'variant-glass-primary' : 'variant-glass-secondary'}
+"
 >
-  <p class="card-header">{time}:00</p>
+  <p class="card-header">{date.toLocaleTimeString()}</p>
   <p class="card-footer">{task}</p>
 </button>
