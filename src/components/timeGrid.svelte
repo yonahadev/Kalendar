@@ -13,8 +13,11 @@
   }
 </script>
 
-<p>Selected time: {selectedTime}</p>
+<!-- <p>Selected time: {selectedTime}</p> -->
 <div class="grid-cols-7 grid">
+  {#each { length: 7 } as dateHeader, headerIndex (headerIndex)}
+    <p>{getTime(baseTime, headerIndex * 24).toDateString()}</p>
+  {/each}
   {#each { length: 24 } as row, rowIndex (rowIndex)}
     {#each { length: 7 } as column, columnIndex (columnIndex)}
       <TimeSlot
